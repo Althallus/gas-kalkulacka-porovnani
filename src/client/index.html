@@ -1,689 +1,772 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="cs">
 <head>
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=125%, initial-scale=1.5"/>
-
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-      <style>
-      
-      </style>
-      </head>
-
-<body lang="cs-CZ">
-
-	<title>Porovnání</title>
-
-	<nav>
-		<div class="nav-wrapper z-depth-3" style="background-color: #00acc1;">
-			<a class="brand-logo white-text" style="padding-left:30px;">Porovnání
-				produktů<i style="color: #FFFFFF">F!Dos OnLine</i></a>
-
-			<ul id="nav-mobile" class="right hide-on-med-and-down">
-
-			</ul>
-		</div>
-	</nav>
-
-	<div class="container">
-
-<!-------------ZADANI KALKULACE---------->
-		<div class="row">
-			<div class="col s12">
-
-				<div class="card">
-					<div class="card-content">
-						<span class="card-title">Nastavení kalkulace</span>
-						<div class="row">
-
-							<div class="col s2">
-								<input id="jednoraz" name="jednoraz" type="number" inputmode="numeric" class="validate" style="font-size:22px; text-align:center;" placeholder="Jednoráz">
-                <label for="jednoraz">Jednoráz</label>
-              </div>
-								<div class="col s2">
-									<input id="pravidelka" name="pravidelka" type="number" inputmode="numeric" class="validate" style="font-size:22px; text-align:center;" placeholder="Pravidelka">
-                <label for="pravidelka">Pravidelka</label>
-              </div>
-									<div class="col s1">
-										<input id="doba" name="doba" type="number" inputmode="numeric" class="validate" style="font-size:22px; text-align:center;" placeholder="Doba">
-                <label for="doba">Roky</label>
-              </div>
-
-										<div class="col s2">
-											<p> Kalkulovat</p>
-											<form action="#" id="check_zobrazeni_sloupcu">
-												<p>
-													<label>
-                            <input type="checkbox" id="check_vyhodnoceni_CT" class="filled-in"/>
-                            <span style="color:black">Spořící / Běžný účet</span>
-                          </label>
-												</p>
-												<p>
-													<label>
-                            <input type="checkbox" id="check_stavebko" class="filled-in"/>
-                            <span style="color:black">Stavební spoření</span>
-                          </label>
-												</p>
-												<p>
-													<label>
-                            <input type="checkbox" id="check_penzijko" class="filled-in"/>
-                            <span style="color:black">Penzijní spoření</span>
-                          </label>
-												</p>
-												<p>
-													<label>
-                            <input type="checkbox" id="check_investice" class="filled-in"/>
-                            <span style="color:black">Investice</span>
-                          </label>
-												</p>
-											</form>
-
-										</div>
-
-<!----------------- TLACITKA ----------->
-										<div class="col s2">
-											<a id="btn_count" class="btn-small cyan darken-3 z-depth-2"
-												style="border-radius: 25px"><i class="material-icons left">iso</i>Spočítat</a>
-											<br>
-											<br>
-											<a class="btn-small modal-trigger cyan darken-3 z-depth-2" id="btn_modify"
-												href="#modal_details"
-												style="border-radius: 25px"><i class="material-icons left">tune</i>Upřesnění</a>
-										</div>
-
-<!------------------ ZASKRTAVATKA ZOBRAZENI DAT  ---------->
-                    	<div class="col s2">
-											<p>.</p>
-											<form action="#" id="check_zobrazeni_3">
-												<p>
-													<label>
-                            <input type="checkbox" id="check_nominal" class="filled-in"/>
-                            <span style="color:black">Nominální hodnoty</span>
-                          </label>
-												</p>
-												<p>
-													<label>
-                            <input type="checkbox" id="check_real" class="filled-in"/>
-                            <span style="color:black">Reálné honoty</span>
-                          </label>
-												</p>
-                        <p>
-													<label>
-                            <input type="checkbox" id="check_plusy" class="filled-in"/>
-                            <span style="color:black">Plusy & mínusy</span>
-                          </label>
-												</p>
-											</form>
-										</div>
-									</div> 
-<!-- END ROW -->
-
-                    <!-- <div class="row">
-              </div> -->
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F!Dos Porovnání produktů</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <?!= include('styles'); ?>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-calculator"></i> F!Dos Porovnání produktů
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm me-2" onclick="exportToPDF()">
+                            <i class="bi bi-file-pdf"></i> Export PDF
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm" onclick="exportToGoogleSheets()" id="exportSheetsBtn">
+                            <i class="bi bi-file-earmark-spreadsheet"></i> Export do Sheets
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-<!-------------END OF ZADANI---------->
+    </nav>
 
-
-
-
-<!------------- PRODUKTY KARTY  -->
-  <div class="row">
-
-<!--------------SPORAK  --------->
-    <div class="column">
-      <!-- <div class="col s3"> -->
-      <div class="card" id="sporak">
-        <span class="card-title">ÚČET - BĚŽNÝ / SPOŘÍCÍ</span>
-        <div class="card-content">
-          <!-- NOMINALNI HODNOTY -->
-          <div class="row" id="nominal" hidden>
-            <div class="col s12" style="text-align:left; color:#006064">
-              <u>Hodnoty bez vlivu inflace a zdanění</u>
+    <div class="container mt-4">
+        <!-- Nastavení kalkulace -->
+        <div class="card settings-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-gear"></i> Nastavení kalkulace
+                </h5>
             </div>
-            <div class="col s6" style="text-align:right">
-              <p>Úrok na vkladech </p>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Základní vstupy -->
+                    <div class="col-md-3">
+                        <label for="jednoraz" class="form-label">Jednorázový vklad</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="jednoraz" placeholder="0" value="50 000">
+                            <span class="input-group-text">Kč</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="pravidelka" class="form-label">Měsíční vklad</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="pravidelka" placeholder="0" value="2 000">
+                            <span class="input-group-text">Kč</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="doba" class="form-label">Doba</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="doba" placeholder="10" value="10">
+                            <span class="input-group-text">let</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-primary w-100" onclick="calculateAll()">
+                            <i class="bi bi-calculator"></i> Spočítat
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="bi bi-sliders"></i> Nastavení
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Filtry produktů -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label class="form-label">Produkty k porovnání:</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_sporak" checked>
+                                <label class="form-check-label" for="check_sporak">Spořící účet</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_stavebko" checked>
+                                <label class="form-check-label" for="check_stavebko">Stavební spoření</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_penzijko" checked>
+                                <label class="form-check-label" for="check_penzijko">Penzijní spoření</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_investice" checked>
+                                <label class="form-check-label" for="check_investice">Investice</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtry zobrazení -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label class="form-label">Zobrazení hodnot:</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_nominal" checked>
+                                <label class="form-check-label" for="check_nominal">Nominální hodnoty</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_real" checked>
+                                <label class="form-check-label" for="check_real">Reálné hodnoty</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check_plusy" checked>
+                                <label class="form-check-label" for="check_plusy">Plusy & mínusy</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col s6">
-              <b id="sporak_urok" name="sporak_urok" style="color:black">% p.a.</b>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Celkem na konci </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_celkem" name="sporak_celkem" style="color:black">Kč</b>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Celková výkonnost </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_vykonnost" name="sporak_vykonnost" style="color:black"> %</b>
-            </div>
-            <div class="col s12">
-              <hr>
-            </div>
-          </div>
-
-<!-- REALNE HODNOTY -->
-          <div class="row" id="real" hidden>
-            <div class="col s12" style="text-align:left; color:#006064 ">
-              <u>Reálné hodnoty s vlivem inflace, zdanění a případných poplatků</u>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Realná úroková míra </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_r_urok" name="sporak_r_urok" style="color:black">%</b>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Reálně na konci </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_r_celkem" name="sporak_r_celkem" style="color:black"> %</b>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Reálný výnos </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_r_vynos" name="sporak_r_vynos" style="color:black">%</b>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Poplatky celkem </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_poplatky" name="sporak_poplatky" style="color:black"> Kč</b>
-            </div>
-            <div class="col s6" style="text-align:right">
-              <p>Úrok po zdanění </p>
-            </div>
-            <div class="col s6">
-              <b id="sporak_urok_po_dani" name="sporak_urok_po_dani" style="color:black">%</b>
-            </div>
-          <div class="col s12">
-              <hr>
-            </div>
-          </div>
-
-         
-<!-- PLUSY MINUSY -->
-          <div class="row" id="plusy">
-            <div class="col s12" style="padding-left:30px">
-              <p style="text-align:center">Plusy & mínusy</p>
-              <p><i class="material-icons" style="color:green">add</i> Pojištění vkladů
-              </p>
-              <p><i class="material-icons" style="color:green">add</i> Peníze hned po ruce
-              </p>
-              <p><i class="material-icons" style="color:red">remove</i> Nízký úrok pod
-                úrovní inflace</p>
-              <p><i class="material-icons" style="color:red">remove</i> Zdanění už tak
-                nízkého úroku</p>
-            </div>
-          </div>
-
         </div>
 
+        <!-- Výsledky -->
+        <div id="results" class="row g-4">
+            <!-- Spořící účet -->
+            <div class="col-lg-6" id="sporak_container">
+                <div class="card product-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-piggy-bank"></i> Spořící / Běžný účet
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Nominální hodnoty -->
+                        <div class="nominal-section">
+                            <h6 class="text-primary">
+                                <i class="bi bi-graph-up"></i> Nominální hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Vloženo:</div>
+                                <div class="col-6 result-value" id="sporak_vlozeno">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Úrok p.a.:</div>
+                                <div class="col-6 result-value" id="sporak_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celkem na konci:</div>
+                                <div class="col-6 result-value" id="sporak_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celková výkonnost:</div>
+                                <div class="col-6 result-value" id="sporak_vykonnost">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Reálné hodnoty -->
+                        <div class="real-section">
+                            <h6 class="text-info">
+                                <i class="bi bi-graph-down"></i> Reálné hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Reálná úroková míra:</div>
+                                <div class="col-6 result-value" id="sporak_r_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálně na konci:</div>
+                                <div class="col-6 result-value" id="sporak_r_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálný výnos:</div>
+                                <div class="col-6 result-value" id="sporak_r_vynos">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Úrok po zdanění:</div>
+                                <div class="col-6 result-value" id="sporak_urok_po_dani">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Plusy a mínusy -->
+                        <div class="plusy-section">
+                            <h6 class="text-secondary">
+                                <i class="bi bi-list-check"></i> Plusy & mínusy
+                            </h6>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Pojištění vkladů</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Peníze hned po ruce</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Nízký úrok pod úrovní inflace</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Zdanění už tak nízkého úroku</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      </div>
+            <!-- Investice -->
+            <div class="col-lg-6" id="investice_container">
+                <div class="card product-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-graph-up-arrow"></i> Investice
+                            <small class="ms-2" id="investice_doba_info"></small>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Nominální hodnoty -->
+                        <div class="nominal-section">
+                            <h6 class="text-primary">
+                                <i class="bi bi-graph-up"></i> Nominální hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Vloženo:</div>
+                                <div class="col-6 result-value" id="investice_vlozeno">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Očekávaný výnos:</div>
+                                <div class="col-6 result-value" id="investice_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celkem na konci:</div>
+                                <div class="col-6 result-value" id="investice_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Absolutní výnos:</div>
+                                <div class="col-6 result-value" id="investice_vykonnost">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Reálné hodnoty -->
+                        <div class="real-section">
+                            <h6 class="text-info">
+                                <i class="bi bi-graph-down"></i> Reálné hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Reálná úroková míra:</div>
+                                <div class="col-6 result-value" id="investice_r_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálně na konci:</div>
+                                <div class="col-6 result-value" id="investice_r_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálný výnos:</div>
+                                <div class="col-6 result-value" id="investice_r_vynos">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Daň z výnosu:</div>
+                                <div class="col-6 result-value" id="investice_dan">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Plusy a mínusy -->
+                        <div class="plusy-section">
+                            <h6 class="text-secondary">
+                                <i class="bi bi-list-check"></i> Plusy & mínusy
+                            </h6>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Dostupnost peněz</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Velké množství - každý si vybere</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Šance na vyšší výnosy</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Bez garance výnosu</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stavební spoření -->
+            <div class="col-lg-6" id="stavebko_container">
+                <div class="card product-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-house"></i> Stavební spoření
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Nominální hodnoty -->
+                        <div class="nominal-section">
+                            <h6 class="text-primary">
+                                <i class="bi bi-graph-up"></i> Nominální hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Vloženo:</div>
+                                <div class="col-6 result-value" id="stavebko_vlozeno">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Úrok na vkladech:</div>
+                                <div class="col-6 result-value" id="stavebko_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celkem na konci:</div>
+                                <div class="col-6 result-value" id="stavebko_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celková výkonnost:</div>
+                                <div class="col-6 result-value" id="stavebko_vykonnost">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Státní příspěvek ročně:</div>
+                                <div class="col-6 result-value" id="stavebko_prispevek">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Státní příspěvek celkem:</div>
+                                <div class="col-6 result-value" id="stavebko_prispevek_celkem">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Reálné hodnoty -->
+                        <div class="real-section">
+                            <h6 class="text-info">
+                                <i class="bi bi-graph-down"></i> Reálné hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Reálná úroková míra:</div>
+                                <div class="col-6 result-value" id="stavebko_r_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálně na konci:</div>
+                                <div class="col-6 result-value" id="stavebko_r_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálný výnos:</div>
+                                <div class="col-6 result-value" id="stavebko_r_vynos">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Plusy a mínusy -->
+                        <div class="plusy-section">
+                            <h6 class="text-secondary">
+                                <i class="bi bi-list-check"></i> Plusy & mínusy
+                            </h6>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Státní příspěvky</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Garance úroku na vkladech</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Peníze vázané na 6 let</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Bez variability nastavení</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penzijní spoření -->
+            <div class="col-lg-6" id="penzijko_container">
+                <div class="card product-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person-check"></i> Penzijní spoření
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Nominální hodnoty -->
+                        <div class="nominal-section">
+                            <h6 class="text-primary">
+                                <i class="bi bi-graph-up"></i> Nominální hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Vloženo:</div>
+                                <div class="col-6 result-value" id="penzijko_vlozeno">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Zhodnocení vkladů:</div>
+                                <div class="col-6 result-value" id="penzijko_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celkem:</div>
+                                <div class="col-6 result-value" id="penzijko_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Celková výkonnost:</div>
+                                <div class="col-6 result-value" id="penzijko_vykonnost">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Státní příspěvek:</div>
+                                <div class="col-6 result-value"><span id="penzijko_prispevek_platba">-</span> Kč</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Státní příspěvek celkem:</div>
+                                <div class="col-6 result-value" id="penzijko_prispevek_celkem">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Reálné hodnoty -->
+                        <div class="real-section">
+                            <h6 class="text-info">
+                                <i class="bi bi-graph-down"></i> Reálné hodnoty
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">Reálná úroková míra:</div>
+                                <div class="col-6 result-value" id="penzijko_r_urok">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálně na konci:</div>
+                                <div class="col-6 result-value" id="penzijko_r_celkem">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Reálný výnos:</div>
+                                <div class="col-6 result-value" id="penzijko_r_vynos">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Výnos z tvých vkladů:</div>
+                                <div class="col-6 result-value" id="penzijko_vynos_klienta">-</div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+                        <!-- Plusy a mínusy -->
+                        <div class="plusy-section">
+                            <h6 class="text-secondary">
+                                <i class="bi bi-list-check"></i> Plusy & mínusy
+                            </h6>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>Státní příspěvky</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-plus-circle text-success me-2"></i>
+                                <small>3 investiční strategie na výběr</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Peníze vázané do důchodu</small>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-dash-circle text-danger me-2"></i>
+                                <small>Zdanění výnosu</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pro pokročilé nastavení -->
+        <div class="modal fade" id="settingsModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-sliders"></i> Pokročilé nastavení
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Přednastavené profily -->
+                        <div class="mb-4">
+                            <h6>Rychlé nastavení investic:</h6>
+                            <div class="btn-group w-100" role="group">
+                                <button type="button" class="btn btn-outline-primary" onclick="setInvestmentProfile('conservative')">
+                                    Konzervativní (4%)
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setInvestmentProfile('balanced')">
+                                    Vyvážené (6%)
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" onclick="setInvestmentProfile('dynamic')">
+                                    Dynamické (9%)
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Úrokové sazby -->
+                        <h6>Očekávané výnosy a inflace:</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label for="set_sporak_urok" class="form-label">Spořák/BÚ (%)</label>
+                                <input type="number" class="form-control" id="set_sporak_urok" value="2" step="0.1">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="set_stavebko_urok" class="form-label">Stavebko (%)</label>
+                                <input type="number" class="form-control" id="set_stavebko_urok" value="1.5" step="0.1">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="set_penzijko_urok" class="form-label">Penzijko (%)</label>
+                                <input type="number" class="form-control" id="set_penzijko_urok" value="4" step="0.1">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="set_investice_urok" class="form-label">Investice (%)</label>
+                                <input type="number" class="form-control" id="set_investice_urok" value="5" step="0.1" readonly>
+                                <small class="form-text text-muted">Automaticky nastaveno podle doby</small>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="set_dan" class="form-label">Daň (%)</label>
+                                <input type="number" class="form-control" id="set_dan" value="15" step="1">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="set_inflace" class="form-label">Inflace (%)</label>
+                                <input type="number" class="form-control" id="set_inflace" value="3" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- Info o dynamickém nastavení investic -->
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Automatické nastavení investic podle doby:</strong><br>
+                            1-3 roky: 3% (krátká doba) | 4-6 let: 5% (střední doba) | 7+ let: 7% (dlouhá doba)
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                        <button type="button" class="btn btn-primary" onclick="calculateAll(); bootstrap.Modal.getInstance(document.getElementById('settingsModal')).hide();">
+                            Uložit a přepočítat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading overlay -->
+        <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none" style="background: rgba(0,0,0,0.5); z-index: 9999;">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-center text-white">
+                    <div class="spinner-border mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div>Zpracovávám...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast container for notifications -->
+        <div class="toast-container position-fixed top-0 end-0 p-3"></div>
     </div>
-  <!------------ END SPORAK -->
 
-<!--------------INVESTICE  --------->
-						<div class="column">
-							<!-- <div class="col s3" hidden> -->
-							<div class="card" id="investice">
-								<span class="card-title">INVESTICE</span>
-								<div class="card-content">
-									<div class="row" id="nominal_2" hidden>
-                    <div class="col s12" style="text-align:left; color:#006064">
-              <u>Hodnoty bez vlivu inflace a zdanění</u>
+    <!-- Footer -->
+    <footer class="mt-5 py-4 bg-light border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-primary">
+                        <i class="bi bi-info-circle"></i> O kalkulačce
+                    </h6>
+                    <p class="small text-muted mb-2">
+                        F!Dos Porovnání produktů je moderní nástroj pro porovnání finančních produktů. 
+                        Pomáhá vám najít nejlepší způsob spoření a investování.
+                    </p>
+                    <p class="small text-muted">
+                        <i class="bi bi-shield-check text-success"></i> 
+                        Všechny výpočty probíhají lokálně ve vašem prohlížeči.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-primary">
+                        <i class="bi bi-gear"></i> Funkce
+                    </h6>
+                    <ul class="list-unstyled small">
+                        <li><i class="bi bi-check text-success"></i> Porovnání 4 produktů</li>
+                        <li><i class="bi bi-check text-success"></i> Reálné vs nominální hodnoty</li>
+                        <li><i class="bi bi-check text-success"></i> Dynamické nastavení investic</li>
+                        <li><i class="bi bi-check text-success"></i> Export do PDF</li>
+                        <li><i class="bi bi-check text-success"></i> Responzivní design</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-primary">
+                        <i class="bi bi-exclamation-triangle"></i> Upozornění
+                    </h6>
+                    <p class="small text-muted">
+                        Výsledky kalkulačky jsou pouze orientační. 
+                        Pro konkrétní investiční rozhodnutí konzultujte s finančním poradcem.
+                    </p>
+                    <p class="small text-muted">
+                        <strong>Verze:</strong> 2.1 (2025)
+                    </p>
+                </div>
             </div>
-										<!----------PREHLED VYNOSU  -->
-										<div class="col s6" style="text-align:right">
-											<p>Očekávaný výnos </p>
-										</div>
-										<div class="col s6">
-											<b id="investice_urok" name="investice_urok" style="color:black">% p.a.</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Celkem na konci</p>
-										</div>
-										<div class="col s6">
-											<b id="investice_celkem" name="investice_celkem" style="color:black"> Kč</b>
-										</div>
-                            <div class="col s6" style="text-align:right">
-                      <p>Absolutní kalkulovaný výnos </p>
+            <hr class="my-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 small text-muted">
+                        © 2025 F!Dos Porovnání produktů - Všechna práva vyhrazena
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="showAbout()">
+                            <i class="bi bi-info-circle"></i> O aplikaci
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="resetToDefaults()">
+                            <i class="bi bi-arrow-clockwise"></i> Reset
+                        </button>
                     </div>
-                    <div class="col s6">
-                      <b id="investice_vykonnost" name="investice_vykonnost" style="color:black"> %</b>
-                    </div>
-                    <div class="col s12">
-                      <hr>
-                    </div>
-									</div>
-
-
-									<!--------- REALNY VYNOS -->
-									<div class="row" id="real_2" hidden>
-                    <div class="col s12" style="text-align:left; color:#006064 ">
-              <u>Reálné hodnoty s vlivem inflace, zdanění a případných poplatků</u>
+                </div>
             </div>
-										<div class="col s6" style="text-align:right">
-											<p>Realná úroková míra </p>
-										</div>
-										<div class="col s6">
-											<b id="investice_r_urok" name="investice_r_urok" style="color:black"> %</b>
-										</div>
-                    <div class="col s6" style="text-align:right">
-											<p>Reálně na konci </p>
-										</div>
-										<div class="col s6">
-											<b id="investice_r_celkem" name="investice_r_celkem" style="color:black"> %</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Reálný absolutní výnos </p>
-										</div>
-										<div class="col s6">
-											<b id="investice_r_vynos" name="investice_r_vynos" style="color:black"> %</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Vstupní poplatek </p>
-										</div>
-										<div class="col s6">
-											<b id="investice_vstupak" name="investice_vstupak" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Daň z výnosu </p>
-										</div>
-										<div class="col s6">
-											<b id="investice_dan" name="investice_dan" style="color:black"> Kč</b>
-										</div>
-										<div class="col s12" style="text-align:center">
-											<p>(v případě nesplnění časového testu) </p>
-										</div>
-                    <div class="col s12">
-                      <hr>
+        </div>
+    </footer>
+
+    <!-- About Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-info-circle"></i> O aplikaci F!Dos Porovnání produktů
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-calculator display-4 text-primary"></i>
+                        <h4 class="mt-2">F!Dos Porovnání produktů v2.1</h4>
                     </div>
-									</div>
-
-
-									<div class="row" id="plusy_2">
-										<div class="col s12" style="padding-left:30px">
-											<p style="text-align:center">Plusy & mínusy</p>
-											<!-- <p><i class="material-icons" style="color:green">add</i> Velká variabilita</p> -->
-											<p><i class="material-icons" style="color:green">add</i> Dostupnost peněz
-											</p>
-											<p><i class="material-icons" style="color:green">add</i> Velké množství -
-												Každý si vybere </p>
-											<p><i class="material-icons" style="color:green">add</i> Šance na vyšší
-												výnosy - kontinuální výdělek</p>
-											<p><i class="material-icons" style="color:red">remove</i> Bez garance výnosu
-											</p>
-											<!-- <p><i class="material-icons" style="color:red">remove</i> Zdanění už tak nízkého úroku</p> -->
-										</div>
-									</div>
-
-								</div>
-
-							</div>
-						</div>
-<!------------ ENO INVESTICE -->
-
-<!--------------STAVEBKO  --------->
-						<div class="column">
-							<!-- <div class="col s3"> -->
-							<div class="card" id="stavebko" >
-								<span class="card-title">STAVEBNÍ SPOŘENÍ</span>
-								<div class="card-content">
-									<div class="row" id="nominal_3" hidden>
-
-                    <div class="col s12" style="text-align:left; color:#006064">
-              <u>Hodnoty bez vlivu inflace a zdanění</u>
+                    
+                    <h6>Účel aplikace:</h6>
+                    <p>Moderní kalkulačka pro porovnání výkonnosti různých finančních produktů. Pomáhá najít optimální způsob spoření a investování s ohledem na inflaci, daně a investiční horizont.</p>
+                    
+                    <h6>Podporované produkty:</h6>
+                    <ul>
+                        <li><strong>Spořící účty</strong> - klasické bankovní produkty (2% p.a.)</li>
+                        <li><strong>Stavební spoření</strong> - se státními příspěvky (1.5% p.a.)</li>
+                        <li><strong>Penzijní spoření</strong> - s výpočtem státních příspěvků (4% p.a.)</li>
+                        <li><strong>Investice</strong> - dynamické nastavení podle doby (3-7% p.a.)</li>
+                    </ul>
+                    
+                    <h6>Novinky ve verzi 2.1:</h6>
+                    <ul>
+                        <li>Dynamické nastavení výnosů investic podle investičního horizontu</li>
+                        <li>Přehlednější zobrazení vložených částek</li>
+                        <li>Formátování čísel s oddělovači tisíců</li>
+                        <li>Adaptivní výška karet podle zobrazených sekcí</li>
+                        <li>Zjednodušené nastavení bez poplatků</li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>Důležité:</strong> Výsledky jsou pouze orientační a nenahrazují profesionální finanční poradenství.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                </div>
             </div>
-										<div class="col s6" style="text-align:right">
-											<p>Úrok na vkladech </p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_urok" name="stavebko_urok" style="color:black"> % p.a.</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Celkem na konci</p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_celkem" name="stavebko_celkem" style="color:black"> Kč</b>
-										</div>
-                      <div class="col s6" style="text-align:right">
-                <p>Absolutní kalkulovaný výnos </p>
-              </div>
-              <div class="col s6">
-                <b id="stavebko_vykonnost" name="stavebko_vykonnost" style="color:black"> %</b>
-              </div>
-										<div class="col s6" style="text-align:right">
-											<p>Státní příspěvek ročně </p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_prispevek" name="stavebko_prispevek" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Státní příspěvek celkem </p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_prispevek_celkem" name="stavebko_prispevek_celkem" style="color:black"> Kč</b>
-										</div>
-                    <div class="col s12">
-                      <hr>
-                    </div>
-									</div>
+        </div>
+    </div>
 
-<!-- REALNE HODNOTY -->
-									<div class="row" id="real_3" hidden>
-                    <div class="col s12" style="text-align:left; color:#006064 ">
-              <u>Reálné hodnoty s vlivem inflace, zdanění a případných poplatků</u>
-            </div>
-										<div class="col s6" style="text-align:right">
-											<p>Realná úroková míra </p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_r_urok" name="stavebko_r_urok" style="color:black"> %</b>
-										</div>
-                    <div class="col s6" style="text-align:right">
-											<p>Reálně na konci </p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_r_celkem" name="stavebko_r_celkem" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Reálný výnos celkem</p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_r_vynos" name="stavebko_r_vynos"style="color:black"> %</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Poplatek za založení</p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_vstupak" name="stavebko_vstupak" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Poplaty za vedení účtu celkem</p>
-										</div>
-										<div class="col s6">
-											<b id="stavebko_poplatky" name="stavebko_poplatky" style="color:black"> Kč</b>
-										</div>
-                    <div class="col s12">
-                      <hr>
-                    </div>
-									</div>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <?!= include('script'); ?>
 
+    <!-- Additional helper functions -->
+    <script>
+        // Show About modal
+        function showAbout() {
+            const modal = new bootstrap.Modal(document.getElementById('aboutModal'));
+            modal.show();
+        }
 
-									<div class="row" id="plusy_3">
-										<div class="col s12" style="padding-left:30px">
-											<p style="text-align:center">Plusy & mínusy</p>
-											<p><i class="material-icons" style="color:green">add</i> Státní příspěvky
-											</p>
-											<p><i class="material-icons" style="color:green">add</i> Garance úroku na
-												vkladech</p>
-											<p><i class="material-icons" style="color:red">remove</i> Peníze vázané na 6
-												let</p>
-											<p><i class="material-icons" style="color:red">remove</i> Bez variability
-												individuálního nastavení</p>
-										</div>
-									</div>
+        // Reset to default values
+        function resetToDefaults() {
+            if (confirm('Opravdu chcete resetovat všechna nastavení na výchozí hodnoty?')) {
+                // Reset main inputs
+                document.getElementById('jednoraz').value = '50 000';
+                document.getElementById('pravidelka').value = '2 000';
+                document.getElementById('doba').value = '10';
+                
+                // Reset settings - nové defaulty
+                document.getElementById('set_sporak_urok').value = '2';
+                document.getElementById('set_stavebko_urok').value = '1.5';
+                document.getElementById('set_penzijko_urok').value = '4';
+                document.getElementById('set_investice_urok').value = '5';
+                document.getElementById('set_dan').value = '15';
+                document.getElementById('set_inflace').value = '3';
+                
+                // Reset checkboxes
+                ['sporak', 'stavebko', 'penzijko', 'investice', 'nominal', 'real', 'plusy'].forEach(id => {
+                    const checkbox = document.getElementById(`check_${id}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                
+                // Clear localStorage
+                if (typeof Storage !== 'undefined') {
+                    localStorage.removeItem('fidosCalculatorSettings');
+                }
+                
+                // Recalculate
+                if (window.calculator) {
+                    window.calculator.updateInvestmentRate();
+                    window.calculator.toggleProductVisibility();
+                    window.calculator.toggleSectionVisibility();
+                    window.calculator.calculateAll();
+                }
+                
+                alert('Nastavení bylo resetováno na výchozí hodnoty');
+            }
+        }
 
-								</div>
-
-							</div>
-						</div>
-  <!-------END STAVEBKO  -->
-
-						<!--------------PENZIJKO  --------->
-						<div class="column">
-							<!-- <div class="col s3" hidden> -->
-							<div class="card" id="penzijko">
-								<span class="card-title">PENZIJNÍ SPOŘENÍ</span>
-								<div class="card-content">
-									<div class="row" id="nominal_4" hidden>
-
-                    <div class="col s12" style="text-align:left; color:#006064">
-              <u>Hodnoty bez vlivu inflace a zdanění</u>
-            </div>
-										<div class="col s6" style="text-align:right">
-											<p>Zhodnocení vkladů </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_urok" name="penzijko_urok" style="color:black"> % p.a.</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Celkem </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_celkem" name="penzijko_celkem" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-                      <p>Celková výkonnost </p>
-                    </div>
-                    <div class="col s6">
-                      <b id="penzijko_vykonnost" name="penzijko_vykonnost" style="color:black"> %</b>
-                    </div>
-										<div class="col s6" style="text-align:right">
-											<p>Státní příspěvek na platbu </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_prispevek_platba" name="penzijko_prispevek_platba" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Státní příspěvek celkem </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_prispevek_celkem" name="penzijko_prispevek_celkem" style="color:black"> Kč</b>
-										</div>
-                    <div class="col s12">
-                      <hr>
-                    </div>
-									</div>
-
-
-									<!--------REALNE VYNOSY  -->
-									<div class="row" id="real_4" hidden>
-                    <div class="col s12" style="text-align:left; color:#006064 ">
-              <u>Reálné hodnoty s vlivem inflace, zdanění a případných poplatků</u>
-            </div>
-										<div class="col s6" style="text-align:right">
-											<p>Realná úroková míra </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_r_urok" name="penzijko_r_urok" style="color:black"> %</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Reálně na konci </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_r_celkem" name="penzijko_r_celkem" style="color:black"> Kč</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Reálný výnos </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_r_vynos" name="penzijko_r_vynos" style="color:black"> %</b>
-										</div>
-										<div class="col s6" style="text-align:right">
-											<p>Výnosy z příspěvků klienta </p>
-										</div>
-										<div class="col s6">
-											<b id="penzijko_vynos_klienta" name="penzijko_vynos_klienta" style="color:black"> Kč</b>
-										</div>
-                    <div class="col s12">
-                      <hr>
-                    </div>
-									</div>
-
-									<div class="row" id="plusy_4">
-										<div class="col s12" style="padding-left:30px">
-											<p style="text-align:center">Plusy & mínusy</p>
-											<p><i class="material-icons" style="color:green">add</i> Státní příspěvky
-											</p>
-											<p><i class="material-icons" style="color:green">add</i> Na výběr ze tří
-												investičních strategií </p>
-											<p><i class="material-icons" style="color:red">remove</i> Peníze vázané do
-												věku důchodu </p>
-											<p><i class="material-icons" style="color:red">remove</i> Zdanění výnosu</p>
-										</div>
-									</div>
-
-								</div>
-
-							</div>
-						</div>
-<!---------- END PENZIJKO  -->
-
-
- 
-
-					</div> <!-- END ROW -->
-
-
-				</div> <!-- END CONTAINER -->
-
-				<footer class="page-footer">
-					<div class="footer-copyright black-text " style="padding-left:5px">
-						© 2020 FiDos - All rights reserved
-					</div>
-					<!-- </div> -->
-				</footer>
-
-
-				<!------------MODAL -->
-				<div id="modal_details" class="modal" style="border-radius: 10px">
-					<div class="modal-content">
-						<h6>UPŘESNĚNÍ NASTAVENÍ KALKULAČKY</h6>
-						<hr class="z-depth-2" style="background-color:#00acc1; height:3px; border:none">
-						<div class="row">
-							<div class="input-field col s6">
-								<p style="font-size:135%; border-bottom: 2px #00acc1 solid;">
-									<b>Zadejte předpokládané výnosy, inflaci a daň</b></p>
-							</div>
-							<div class="input-field col s6">
-								<a id="btn_set_short" class="btn-small cyan darken-3 z-depth-2"
-									style="border-radius: 25px"
-									onclick="set_investice_urok.value='4',set_investice_vstupak.value='3',set_investice_mf.value='1.25'"><i class="material-icons left">iso</i>Konzervativní</a>
-								<a id="btn_set_medium" class="btn-small cyan darken-3 z-depth-2"
-									style="border-radius: 25px"
-									onclick="set_investice_urok.value='6',set_investice_vstupak.value='4',set_investice_mf.value='1.75'"><i class="material-icons left">iso</i>Vyvážené</a>
-								<a id="btn_set_long" class="btn-small cyan darken-3 z-depth-2"
-									style="border-radius: 25px"
-									onclick="set_investice_urok.value='9',set_investice_vstupak.value='5',set_investice_mf.value='2'"><i class="material-icons left">iso</i>Dynamické</a>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="input-field col s2">
-								<input id="set_sporak_urok" name="set_sporak_urok" style="text-align:center; font-size: 20px;"  type="number" value="1" class="validate">
-								<label for="set_sporak_urok">% p.a.</label>
-								<span for="set_sporak_urok"><b>Spořák/BÚ</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_stavebko_urok" name="set_stavebko_urok" style="text-align:center; font-size: 20px" type="number" value="1.5"class="validate">
-								<label for="set_stavebko_urok">% p.a.</label>
-								<span for="set_stavebko_urok"><b>Stavebko</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_penzijko_urok" name="set_penzijko_urok" style="text-align:center; font-size: 20px" type="number" value="2"class="validate">
-								<label for="set_penzijko_urok">% p.a.</label>
-								<span for="set_penzijko_urok"><b>Penzijko</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_investice_urok" name="set_investice_urok" style="text-align:center; font-size: 20px" type="number" value="4"class="validate">
-								<label for="set_investice_urok">% p.a.</label>
-								<span for="set_investice_urok"><b>Investice</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_dan" name="set_dan" style="text-align:center; font-size: 20px" type="number" value="15"class="validate">
-								<label for="set_dan">% </label>
-								<span for="set_dan"><b>Daň</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_inflace" name="set_inflace" style="text-align:center; font-size: 20px" type="number" value="3"class="validate">
-								<label for="set_inflace">% p.a.</label>
-								<span for="set_inflace"><b>Inflace</b></span>
-							</div>
-
-						</div>
-
-						<hr class="z-depth-2" style="background-color:#00acc1; height:3px; border:none">
-
-						<div class="row">
-							<div class="input-field col s12">
-								<p style="font-size:135%; border-bottom: 2px #00acc1 solid;">
-									<b>Doplňující informace & poplatky</b></p>
-								<!-- <hr class="z-depth-2" style="background-color:#00acc1; height:3px; border:none"> -->
-							</div>
-						</div>
-
-
-
-						<div class="row">
-							<div class="input-field col s2">
-								<input id="set_sporak_poplatky" name="set_sporak_poplatky" style="text-align:center; font-size: 20px" type="number" value="35"class="validate">
-								<label for="set_sporak_poplatky">Kč</label>
-								<span for="set_sporak_poplatky"><b>Spořák/BÚ - měsíční poplatek</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_stavebko_poplatky" name="set_stavebko_poplatky" style="text-align:center; font-size: 20px" type="number" value="360"class="validate">
-								<label for="set_stavebko_poplatky">Kč</label>
-								<span for="set_stavebko_poplatky"><b>Stavebko - roční poplatek za vedení účtu</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_penzijko_nakladovost" name="set_penzijko_nakladovost" style="text-align:center; font-size: 20px" type="number" value="2"class="validate">
-								<label for="set_penzijko_nakladovost">% p.a.</label>
-								<span for="set_penzijko_nakladovost"><b>Penzijko</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_investice_vstupak" name="set_investice_vstupak" style="text-align:center; font-size: 20px" type="number" value="3" class="validate">
-								<label for="set_investice_vstupak">%</label>
-								<span for="set_investice_vstupak"><b>Investice -  vstupní poplatek</b></span>
-							</div>
-							<div class="input-field col s2">
-								<input id="set_investice_mf" name="set_investice_mf" style="text-align:center; font-size: 20px" type="number" value="1.75"class="validate">
-								<label for="set_investice_mf">% p.a.</label>
-								<span for="set_investice_mf"><b>Investice - manažerský popl.</b></span>
-							</div>
-
-
-						</div>
-
-						<hr class="z-depth-2" style="background-color:#00acc1; height:3px; border:none">
-
-					</div>
-
-
-
-
-					<!-- SKRYTE POMOCNE POLOZKY -->
-					<div class="input-field col s6 m4 l2">
-						<input id="pohlavi_selected" name="pohlavi_selected" type="text" class="hide" >
-					</div>
-
-						<div class="input-field col s6 m4 l2">
-							<input id="typ_prijmu_selected" name="typ_prijmu_selected" style="text-align:center; font-size: 20px" type="text" class="hide">
-					</div>
-
-						</div>
-						<!------------- MODAL END ------------->
-
-					</div>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-
-</script>
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+R - Reset
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                resetToDefaults();
+            }
+            
+            // Ctrl+P - PDF Export
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                exportToPDF();
+            }
+            
+            // Enter - Calculate
+            if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+                const activeElement = document.activeElement;
+                if (activeElement && ['INPUT', 'SELECT'].includes(activeElement.tagName)) {
+                    e.preventDefault();
+                    calculateAll();
+                }
+            }
+            
+            // F1 - About
+            if (e.key === 'F1') {
+                e.preventDefault();
+                showAbout();
+            }
+        });
+    </script>
 </body>
-
 </html>
