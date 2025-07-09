@@ -1,1 +1,69 @@
+/* .row {
+      margin.bottom:5px;
+      } */
 
+       body {
+    font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    /* font-weight: 300; */
+}
+
+  .column {
+  float: left;
+  /* width: 25%; */
+  width: 50%;
+  max-width: 50%;
+  /* display: flex; */
+   /* justify-content: space-between; */
+  padding: 0 10px;
+}
+
+/* Remove extra left and right margins, due to padding in columns */
+.row {margin: 0 -10px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 3px;
+  /* text-align: center; */
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Responsive columns - one column layout (vertical) on small screens */
+@media screen and (max-width: 800px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+.textarea {
+resize: vertical;
+
+}
+      
+.card,::placeholder { 
+  color: #00acc1; 
+  opacity: 1; 
+  /* font-size: 11px;  */
+} 
+
+.page-footer {
+   /* position: fixed; */
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   /* position: sticky; */
+  /* left: 0; */
+  z-index: 1;
+   background-color: #00acc1;
+   /* color: white; */
+   /* text-align: center; */
+}
